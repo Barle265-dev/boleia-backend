@@ -1,0 +1,197 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String     @id @db.Uuid
+  name       String
+  email      String     @unique
+  password String
+  phone      String?
+  photoUrl   String?
+  role       UserRole   @default(passenger)
+  isVerified Boolean    @default(false)
+  rating     Float      @default(0.0)
+  totalTrips Int        @default(0)
+  joinedAt   DateTime   @default(now())
+  isBlocked  Boolean    @default(false)
+
+  vehicles   Vehicle[]
+  documents  UserDocument[]
+
+  drivenRides       Ride[]   @relation("DriverRelation")
+  passengerRides    Ride[]   @relation("PassengerRelation")
+  pendingRides      Ride[]   @relation("PendingPassengerRelation")
+  ratedRides        Ride[]   @relation("RatedByRelation")
+
+  sentMessages      Message[] @relation("MessageSenderRelation")
+  receivedMessages  Message[] @relation("MessageRecipientRelation")
+
+  notifications     Notification[]
+  Permissions      UserPermission[]
+
+  sentFreightRequests     FreightRequest[] @relation("FreightRequesterRelation")
+  receivedFreightRequests FreightRequest[] @relation("FreightFretistaRelation")
+}
+
+
+model Permission {
+  id    String           @id @default(uuid()) @db.Uuid
+  name  String           @unique
+   createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @default(now()) @updatedAt
+  Users UserPermission[]
+}
+
+model UserPermission {
+  userId       String @db.Uuid
+  permissionId String @db.Uuid
+   createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @default(now()) @updatedAt
+
+  User       User       @relation(fields: [userId], references: [id])
+  Permission Permission @relation(fields: [permissionId], references: [id])
+
+  @@id([userId, permissionId])
+}
+
+model UserDocument {
+  id        String         @id @db.Uuid
+  name      String
+  type      DocumentType
+  url       String
+  status    DocumentStatus @default(pending)
+
+  userId String @db.Uuid
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Vehicle {
+  id        String  @id @db.Uuid
+  make      String
+  model     String
+  color     String
+  plate     String  @unique
+  photoUrl  String?
+
+  userId String @db.Uuid
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  rides     Ride[]
+}
+
+model Ride {
+  id             String     @id @db.Uuid
+  origin         String
+  destination    String
+  departureTime  DateTime
+  availableSeats Int
+  totalSeats     Int
+  price          Float?
+  observations   String?
+  status         RideStatus @default(available)
+
+  driverId       String @db.Uuid
+  driver         User       @relation("DriverRelation", fields: [driverId], references: [id])
+
+  vehicleId      String @db.Uuid
+  vehicle        Vehicle?   @relation(fields: [vehicleId], references: [id])
+
+  passengers        User[] @relation("PassengerRelation")
+  pendingPassengers User[] @relation("PendingPassengerRelation")
+  ratedByUsers      User[] @relation("RatedByRelation")
+
+  messages       Message[]
+}
+
+model Message {
+  id          String  @id @db.Uuid
+  text        String
+  timestamp   DateTime @default(now())
+
+   senderId    String  @db.Uuid
+  sender      User     @relation("MessageSenderRelation", fields: [senderId], references: [id])
+
+  recipientId String? @db.Uuid
+  recipient   User?    @relation("MessageRecipientRelation", fields: [recipientId], references: [id])
+
+  rideId      String? @db.Uuid
+  ride        Ride?    @relation(fields: [rideId], references: [id])
+}
+
+model Notification {
+  id        String           @id @db.Uuid
+  title     String
+  message   String
+  type      NotificationType
+  isRead    Boolean          @default(false)
+  timestamp DateTime         @default(now())
+  link      String?
+
+   userId String @db.Uuid
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model FreightRequest {
+  id                 String               @id @db.Uuid
+  origin             String
+  destination        String
+  requestedTime      DateTime?
+  status             FreightRequestStatus @default(pending)
+  createdAt          DateTime             @default(now())
+
+  requesterId         String  @db.Uuid
+  requester          User                 @relation("FreightRequesterRelation", fields: [requesterId], references: [id])
+
+  fretistaId         String? @db.Uuid
+
+  fretista           User?                @relation("FreightFretistaRelation", fields: [fretistaId], references: [id])
+
+  specificFretistaId String? @db.Uuid
+
+}
+
+enum UserRole {
+  passenger
+  driver
+  fretista
+}
+
+enum DocumentType {
+  driving_license
+  national_id
+  vehicle_registration
+}
+
+enum DocumentStatus {
+  pending
+  verified
+  rejected
+}
+
+enum RideStatus {
+  available
+  full
+  in_progress
+  completed
+  cancelled
+}
+
+enum NotificationType {
+  request
+  confirmation
+  message
+  system
+}
+
+enum FreightRequestStatus {
+  pending
+  accepted
+  declined
+}

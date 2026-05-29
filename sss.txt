@@ -1,0 +1,39 @@
+model User {
+  id       String    @id @db.Uuid
+  email     String   @unique
+  name      String
+  gender   String?
+  status    Status    @default(PENDING)
+  phone     String?
+  address   String?
+  type       UserType @default(EXTERNAL)
+  password  String
+  role      Role?     @relation(fields: [roleId], references: [id])
+  roleId    Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Role {
+   id       String    @id @db.Uuid
+  name        String
+  permissions Permission[]
+  users       User[]
+}
+
+model Permission {
+   id      String    @id @db.Uuid
+  name  String @unique
+  roles Role[] @relation("RolePermissions")
+}
+
+enum Status {
+  ACTIVE
+  INACTIVE
+  PENDING
+}
+enum UserType {
+  ADMIN
+ INTERNAL
+ EXTERNAL
+}
