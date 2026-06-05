@@ -6,8 +6,8 @@ export async function respondFreightController(request: FastifyRequest, reply: F
   const { id } = z.object({ id: z.string().uuid() }).parse(request.params);
 
   const schema = z.object({
-    action: z.enum(["accepted", "declined"]).optional(),
-    status: z.enum(["accepted", "declined"]).optional(),
+    action: z.enum(["accepted", "declined", "in_progress", "completed"]).optional(),
+    status: z.enum(["accepted", "declined", "in_progress", "completed"]).optional(),
   });
 
   const { action, status } = schema.parse(request.body);

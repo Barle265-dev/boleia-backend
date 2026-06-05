@@ -21,6 +21,7 @@ export async function registerService(data: UserDto) {
       email: data.email,
       password: hashedPassword,
       phone: data.phone,
+      photoUrl: data.photoUrl,
       role: data.role || UserRole.PASSENGER,
     },
     select: {
@@ -28,6 +29,7 @@ export async function registerService(data: UserDto) {
       name: true,
       email: true,
       phone: true,
+      photoUrl: true,
       role: true,
       isVerified: true,
       joinedAt: true,

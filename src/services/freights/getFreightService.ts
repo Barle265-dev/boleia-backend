@@ -5,21 +5,31 @@ export async function getFreightService(id: string, userId: string) {
     where: { id },
     include: {
       requester: {
-        select: { id: true, name: true, photoUrl: true, rating: true },
+        select: { id: true, name: true, photoUrl: true, rating: true, phone: true },
       },
       fretista: {
-        select: { id: true, name: true, photoUrl: true, rating: true },
+        select: { id: true, name: true, photoUrl: true, rating: true, phone: true },
       },
     },
   });
 
   if (!freight) {
-    throw { statusCode: 404, message: "Pedido de frete não encontrado." };
+    throw { statusCode: 404, message: "Pedido de frete nao encontrado." };
   }
 
-  // Só o solicitante ou o fretista podem ver o detalhe
-  if (freight.requesterId !== userId && freight.fretistaId !== userId) {
-    throw { statusCode: 403, message: "Sem permissão para aceder a este pedido." };
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { role: true },
+  });
+
+  const canView =
+    freight.requesterId === userId ||
+    freight.fretistaId === userId ||
+    freight.specificFretistaId === userId ||
+    (user?.role === "fretista" && freight.status === "pending" && !freight.specificFretistaId);
+
+  if (!canView) {
+    throw { statusCode: 403, message: "Sem permissao para aceder a este pedido." };
   }
 
   return freight;

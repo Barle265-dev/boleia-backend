@@ -9,6 +9,7 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
     email: z.string(),
     password: z.string().min(6),
     phone: z.string().optional(),
+    photoUrl: z.string().optional(),
     role: z
       .enum([UserRole.PASSENGER, UserRole.FRETISTA])
       .default(UserRole.PASSENGER),

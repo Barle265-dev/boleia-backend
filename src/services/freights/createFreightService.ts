@@ -42,10 +42,10 @@ export async function createFreightService(
     },
     include: {
       requester: {
-        select: { id: true, name: true, photoUrl: true, rating: true },
+        select: { id: true, name: true, photoUrl: true, rating: true, phone: true },
       },
       fretista: {
-        select: { id: true, name: true, photoUrl: true, rating: true },
+        select: { id: true, name: true, photoUrl: true, rating: true, phone: true },
       },
     },
   });
@@ -67,7 +67,7 @@ export async function createFreightService(
         title: "Novo pedido de frete",
         message: `Tens um novo pedido de frete de ${data.origin} para ${data.destination}.`,
         type: "request",
-        link: `/my-rides?freight=${freight.id}`,
+        link: `/freight/${freight.id}`,
       })),
     });
   }

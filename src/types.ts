@@ -50,6 +50,8 @@ enum TypeFreightRequestStatus {
   PENDING = "pending",
   ACCEPTED = "accepted",
   DECLINED = "declined",
+  IN_PROGRESS = "in_progress",
+  COMPLETED = "completed",
 }
 
 export const FreightRequestStatus = TypeFreightRequestStatus;

@@ -4,6 +4,7 @@ import { listFretistaController } from "../controllers/freights/listFretistaCont
 import { listFreightsController } from "../controllers/freights/listFreightsController";
 import { getFreightController } from "../controllers/freights/getFreightController";
 import { respondFreightController } from "../controllers/freights/respondFreightController";
+import { rateFreightController } from "controllers/freights/rateFreightController";
 import { verifyJWT } from "middware/verify-jwt";
 
 export async function freightRoutes(app: FastifyInstance) {
@@ -19,4 +20,5 @@ export async function freightRoutes(app: FastifyInstance) {
     { onRequest: [verifyJWT] },
     respondFreightController,
   );
+  app.post("/freights/:id/rate", { onRequest: [verifyJWT] }, rateFreightController);
 }
