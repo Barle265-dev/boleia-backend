@@ -12,7 +12,7 @@ export async function changePassword(
     confirm_password: z.string(),
   });
 
-  const userId = request.user.sub;
+  const userId = request.user.id;
 
   if (!userId) {
     return reply.status(401).send({ error: "Usuário não autenticado" });

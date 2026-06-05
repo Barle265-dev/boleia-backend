@@ -1,58 +1,66 @@
 import { hash } from "bcrypt";
-import { Status, UpdateUserDTO, User } from "../../types";
 import { prisma } from "../../../libs/prisma";
 import { userNotFound } from "error/httpsError";
+import { UserRole } from "../../types";
 
-export async function updateUserService(id: string, data: UpdateUserDTO) {
-  try {
-    const hashedPassword = data.password
-      ? await hash(data.password, 10)
-      : undefined;
+type UserUpdatePayload = {
+  name?: string;
+  email?: string;
+  password?: string;
+  phone?: string | null;
+  photoUrl?: string | null;
+  role?: UserRole;
+  isVerified?: boolean;
+  isBlocked?: boolean;
+  permissionIds?: string[];
+};
 
-    const user = await prisma.user.findFirst({
-      where: { id },
-    });
-    if (!user) {
-      throw userNotFound();
-    }
+export async function updateUserService(id: string, data: UserUpdatePayload) {
+  const user = await prisma.user.findFirst({
+    where: { id },
+  });
 
-    if (data.permissionIds) {
-      await prisma.userPermission.deleteMany({
-        where: { userId: user.id },
-      });
-    }
-
-    const update = await prisma.user.update({
-      where: { id: user.id },
-      data: {
-        name: data.name,
-        email: data.email,
-        address: data.address,
-        phone: data.phone,
-        gender: data.gender,
-        status: data.status || Status.ACTIVE,
-        type: data.type || User.EXTERNAL,
-        password: hashedPassword,
-        roleId: data.roleId,
-        Permissions: data.permissionIds
-          ? {
-              createMany: {
-                data: data.permissionIds.map((permissionId) => ({
-                  permissionId,
-                })),
-              },
-            }
-          : undefined,
-      },
-      include: {
-        Permissions: {
-          include: { Permission: true },
-        },
-      },
-    });
-
-    return update;
-  } catch (error) {
-    throw error;
+  if (!user) {
+    throw userNotFound();
   }
+
+  const hashedPassword = data.password ? await hash(data.password, 10) : undefined;
+
+  if (data.permissionIds) {
+    await prisma.userPermission.deleteMany({
+      where: { userId: user.id },
+    });
+  }
+
+  const updated = await prisma.user.update({
+    where: { id: user.id },
+    data: {
+      name: data.name,
+      email: data.email,
+      phone: data.phone,
+      photoUrl: data.photoUrl,
+      role: data.role,
+      isVerified: data.isVerified,
+      isBlocked: data.isBlocked,
+      password: hashedPassword,
+      Permissions: data.permissionIds
+        ? {
+            createMany: {
+              data: data.permissionIds.map((permissionId: string) => ({ permissionId })),
+              skipDuplicates: true,
+            },
+          }
+        : undefined,
+    },
+    include: {
+      vehicles: true,
+      documents: true,
+      Permissions: {
+        include: { Permission: true },
+      },
+    },
+  });
+
+  const { password, ...safeUser } = updated;
+  return safeUser;
 }

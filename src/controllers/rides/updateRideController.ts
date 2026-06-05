@@ -14,6 +14,7 @@ export async function updateRideController(
     departureTime: z.iso.datetime().optional(),
     price: z.number().optional(),
     observations: z.string().optional(),
+    status: z.enum(["available", "full", "in_progress", "completed", "cancelled"]).optional(),
   });
 
   const data = schema.parse(request.body);

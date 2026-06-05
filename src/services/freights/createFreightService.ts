@@ -1,31 +1,33 @@
-import { prisma } from "../../../libs/prisma";
 import { randomUUID } from "crypto";
+import { prisma } from "../../../libs/prisma";
 import { CreateFreightRequestDto } from "types";
 
 export async function createFreightService(
   data: Omit<CreateFreightRequestDto, "id" | "requesterId" | "status">,
-  requesterId: string
+  requesterId: string,
 ) {
-  // Valida que o fretista existe e tem o role correto
-  const fretista = await prisma.user.findUnique({
-    where: { id: data.fretistaId },
-  });
+  const requestedFretistaId = data.specificFretistaId ?? data.fretistaId;
 
-  if (!fretista) {
-    throw { statusCode: 404, message: "Fretista não encontrado." };
-  }
+  if (requestedFretistaId) {
+    const fretista = await prisma.user.findUnique({
+      where: { id: requestedFretistaId },
+    });
 
-  if (fretista.role !== "fretista") {
-    throw { statusCode: 400, message: "O utilizador selecionado não é um fretista." };
-  }
+    if (!fretista) {
+      throw { statusCode: 404, message: "Fretista nao encontrado." };
+    }
 
-  if (fretista.isBlocked) {
-    throw { statusCode: 400, message: "Este fretista não está disponível." };
-  }
+    if (fretista.role !== "fretista") {
+      throw { statusCode: 400, message: "O utilizador selecionado nao e um fretista." };
+    }
 
-  // Utilizador não pode solicitar frete a si mesmo
-  if (data.fretistaId === requesterId) {
-    throw { statusCode: 400, message: "Não podes solicitar um frete a ti mesmo." };
+    if (fretista.isBlocked) {
+      throw { statusCode: 400, message: "Este fretista nao esta disponivel." };
+    }
+
+    if (requestedFretistaId === requesterId) {
+      throw { statusCode: 400, message: "Nao podes solicitar um frete a ti mesmo." };
+    }
   }
 
   const freight = await prisma.freightRequest.create({
@@ -36,7 +38,7 @@ export async function createFreightService(
       requestedTime: data.requestedTime ? new Date(data.requestedTime) : undefined,
       status: "pending",
       requesterId,
-      fretistaId: data.fretistaId,
+      specificFretistaId: requestedFretistaId,
     },
     include: {
       requester: {
@@ -48,16 +50,27 @@ export async function createFreightService(
     },
   });
 
-  // Notificar o fretista
-  await prisma.notification.create({
-    data: {
-      id: randomUUID(),
-      userId: data.fretistaId,
-      title: "Novo pedido de frete",
-      message: `Tens um novo pedido de frete de ${data.origin} para ${data.destination}.`,
-      type: "request",
-    },
-  });
+  const recipients = requestedFretistaId
+    ? [requestedFretistaId]
+    : (
+        await prisma.user.findMany({
+          where: { role: "fretista", isBlocked: false },
+          select: { id: true },
+        })
+      ).map((user) => user.id);
+
+  if (recipients.length) {
+    await prisma.notification.createMany({
+      data: recipients.map((userId) => ({
+        id: randomUUID(),
+        userId,
+        title: "Novo pedido de frete",
+        message: `Tens um novo pedido de frete de ${data.origin} para ${data.destination}.`,
+        type: "request",
+        link: `/my-rides?freight=${freight.id}`,
+      })),
+    });
+  }
 
   return freight;
 }

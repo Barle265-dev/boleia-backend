@@ -1,14 +1,13 @@
 import { hash } from "bcrypt";
-import { prisma } from "../libs/prisma";
 import { randomUUID } from "crypto";
-import { Gender, Status, User } from "../src/types";
+import { prisma } from "../libs/prisma";
 import { Permissions } from "../src/permissionsTypes";
 
 async function main() {
   const permissionNames = Object.values(Permissions);
 
   const permissions = await Promise.all(
-    permissionNames.map(async (name) =>
+    permissionNames.map((name) =>
       prisma.permission.upsert({
         where: { name },
         update: {},
@@ -17,53 +16,47 @@ async function main() {
     ),
   );
 
-  console.log("Permissões criadas:", permissions.length);
+  console.log("Permissoes criadas:", permissions.length);
 
-  const adminRole = await prisma.role.upsert({
-    where: { name: "Administrador" },
-    update: {},
-    create: { name: "Administrador" },
-  });
-
-  console.log("Role criada:", adminRole.name);
-
-  const hashedPassword = await hash("admin", 10);
+  const hashedPassword = await hash("123456", 10);
   const adminUser = await prisma.user.upsert({
-    where: { email: "admin@admin.com" },
-    update: {},
+    where: { email: "admin@boleia.cv" },
+    update: {
+      password: hashedPassword,
+      isVerified: true,
+      isBlocked: false,
+    },
     create: {
       id: randomUUID(),
-      name: "Joel Oliveira",
-      email: "admin@admin.com",
-      address: "Assomada",
-      gender: Gender.MALE,
-      phone: null,
-      status: Status.ACTIVE,
-      type: "ADMIN",
+      name: "Administrador",
+      email: "admin@boleia.cv",
       password: hashedPassword,
-      roleId: adminRole.id,
+      phone: "+238 900 00 00",
+      role: "passenger",
+      isVerified: true,
     },
   });
 
-  console.log("Usuário admin criado:", adminUser.email);
+  console.log("Usuario admin criado:", adminUser.email);
 
   await prisma.userPermission.createMany({
-    data: permissions.map((p) => ({
+    data: permissions.map((permission) => ({
       userId: adminUser.id,
-      permissionId: p.id,
+      permissionId: permission.id,
     })),
     skipDuplicates: true,
   });
 
-  console.log("Todas as permissões atribuídas ao Joel!");
+  console.log("Todas as permissoes atribuidas ao administrador.");
+  console.log("Credenciais: admin@boleia.cv / 123456");
 }
 
 main()
   .then(async () => {
     await prisma.$disconnect();
   })
-  .catch(async (e) => {
-    console.error(e);
+  .catch(async (error) => {
+    console.error(error);
     await prisma.$disconnect();
     process.exit(1);
   });

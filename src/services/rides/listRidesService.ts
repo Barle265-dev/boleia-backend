@@ -7,7 +7,7 @@ export async function listRidesService(filters: {
 }) {
   const rides = await prisma.ride.findMany({
     where: {
-      status: RideStatus.AVAILABLE,
+      status: { in: [RideStatus.AVAILABLE, RideStatus.FULL, RideStatus.IN_PROGRESS] },
       ...(filters.origin && {
         origin: { contains: filters.origin, mode: "insensitive" },
       }),
@@ -18,9 +18,15 @@ export async function listRidesService(filters: {
     },
     include: {
       driver: {
-        select: { id: true, name: true, rating: true, photoUrl: true },
+        select: { id: true, name: true, rating: true, photoUrl: true, isVerified: true },
       },
       vehicle: true,
+      passengers: {
+        select: { id: true, name: true, photoUrl: true, rating: true, totalTrips: true },
+      },
+      pendingPassengers: {
+        select: { id: true, name: true, photoUrl: true, rating: true, totalTrips: true },
+      },
       _count: {
         select: { passengers: true },
       },

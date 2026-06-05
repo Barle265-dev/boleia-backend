@@ -6,11 +6,12 @@ export async function respondFreightController(request: FastifyRequest, reply: F
   const { id } = z.object({ id: z.string().uuid() }).parse(request.params);
 
   const schema = z.object({
-    action: z.enum(["accepted", "declined"]),
+    action: z.enum(["accepted", "declined"]).optional(),
+    status: z.enum(["accepted", "declined"]).optional(),
   });
 
-  const { action } = schema.parse(request.body);
-  const freight = await respondFreightService(id, action, request.user.id);
+  const { action, status } = schema.parse(request.body);
+  const freight = await respondFreightService(id, action ?? status ?? "declined", request.user.id);
 
   return reply.send(freight);
 }

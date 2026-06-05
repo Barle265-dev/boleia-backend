@@ -6,7 +6,8 @@ export async function profileService(userId: string) {
     const user = await prisma.user.findUnique({
       where: { id: userId },
       include: {
-        Role: true,
+        vehicles: true,
+        documents: true,
         Permissions: {
           include: {
             Permission: true,

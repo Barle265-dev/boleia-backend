@@ -6,22 +6,24 @@ export async function listFreightMessagesService(freightId: string, userId: stri
   });
 
   if (!freight) {
-    throw { statusCode: 404, message: "Pedido de frete não encontrado." };
+    throw { statusCode: 404, message: "Pedido de frete nao encontrado." };
   }
 
   const isRequester = freight.requesterId === userId;
   const isFretista = freight.fretistaId === userId;
 
   if (!isRequester && !isFretista) {
-    throw { statusCode: 403, message: "Não fazes parte deste frete." };
+    throw { statusCode: 403, message: "Nao fazes parte deste frete." };
   }
 
   const messages = await prisma.message.findMany({
     where: {
-      OR: [
-        { senderId: freight.requesterId, recipientId: freight.fretistaId },
-        { senderId: freight.fretistaId, recipientId: freight.requesterId },
-      ],
+      OR: freight.fretistaId
+        ? [
+            { senderId: freight.requesterId, recipientId: freight.fretistaId },
+            { senderId: freight.fretistaId, recipientId: freight.requesterId },
+          ]
+        : [{ senderId: freight.requesterId }],
     },
     include: {
       sender: {

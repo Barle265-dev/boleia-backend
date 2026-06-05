@@ -1,4 +1,3 @@
-import { Status } from "types";
 import { z } from "zod";
 
 export const zodFilterSchema = {
@@ -9,7 +8,7 @@ export const zodFilterSchema = {
 
       const listOfStatus = stringToList
         .filter((status) => status)
-        .map((status) => status as Status);
+        .map((status) => status);
 
       return listOfStatus;
     })

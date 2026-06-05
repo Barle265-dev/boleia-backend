@@ -1,7 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { fetchAllUsersService } from "services/users/fetchAllUsersService";
 import { zodFilterSchema } from "tools/fetch-params";
-import { User } from "types";
 import z from "zod";
 
 export async function fetchAllUsers(
@@ -11,16 +10,6 @@ export async function fetchAllUsers(
   const querySchema = z.object({
     name: z.string().optional(),
     email: z.string().optional(),
-    type: z
-      .string()
-      .transform((type) => {
-        const stringToList = type.split(";");
-        const list = stringToList
-          .filter((type) => type)
-          .map((type) => type as User);
-        return list;
-      })
-      .optional(),
     ...zodFilterSchema,
     sorterBy: z.enum(["name", "email"]).optional().default("name"),
     role: z

@@ -7,7 +7,7 @@ export async function rateRideController(request: FastifyRequest, reply: Fastify
 
   const schema = z.object({
     rating: z.number().min(1).max(5),
-    ratedUserId: z.string().uuid(),
+    ratedUserId: z.string().uuid().optional(),
   });
 
   const data = schema.parse(request.body);

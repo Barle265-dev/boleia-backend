@@ -7,7 +7,8 @@ export async function createFreightController(request: FastifyRequest, reply: Fa
     origin: z.string(),
     destination: z.string(),
     requestedTime: z.string().datetime().optional(),
-    fretistaId: z.string().uuid(),
+    fretistaId: z.string().uuid().optional(),
+    specificFretistaId: z.string().uuid().optional(),
   });
 
   const data = schema.parse(request.body);

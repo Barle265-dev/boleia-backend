@@ -46,6 +46,7 @@ export async function requestJoinRideService(rideId: string, userId: string) {
       title: "Novo pedido de boleia",
       message: `Um utilizador quer entrar na tua boleia de ${ride.origin} para ${ride.destination}.`,
       type: "request",
+      link: `/ride/${rideId}?view=requests`,
     },
   });
 

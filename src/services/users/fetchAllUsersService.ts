@@ -1,4 +1,4 @@
-import { SortOrder, User } from "types";
+import { SortOrder } from "types";
 import { prisma } from "../../../libs/prisma";
 import { Prisma } from "generated/prisma";
 
@@ -6,7 +6,6 @@ interface FilterUser {
   name?: string;
   email?: string;
   role?: string[];
-  type?: User[];
   page: number;
   perPage: number;
   sorterBy: "name" | "email";
@@ -14,7 +13,7 @@ interface FilterUser {
 }
 
 export async function fetchAllUsersService(params: FilterUser) {
-  const { page, perPage, sorterBy, sorterOrder, email, name, type, role } =
+  const { page, perPage, sorterBy, sorterOrder, email, name, role } =
     params;
 
   const skip = (page - 1) * perPage;
@@ -24,16 +23,7 @@ export async function fetchAllUsersService(params: FilterUser) {
   const where: Prisma.UserWhereInput = {
     ...((name && { name: { contains: name, mode: "insensitive" } }) || {}),
     ...((email && { email: { contains: email, mode: "insensitive" } }) || {}),
-    ...(type && {
-      type: { in: type },
-    }),
-    ...(role?.length && {
-      Role: {
-        name: {
-          in: role,
-        },
-      },
-    }),
+    ...(role?.length && { role: { in: role as any } }),
   };
 
   const [users, count] = await prisma.$transaction([
@@ -43,17 +33,15 @@ export async function fetchAllUsersService(params: FilterUser) {
       take,
       orderBy,
       include: {
-        Role: {
-          select: {
-            name: true,
-          },
-        },
+        vehicles: true,
+        documents: true,
+        Permissions: { include: { Permission: true } },
       },
     }),
     prisma.user.count({ where }),
   ]);
   return {
-    users,
+    users: users.map(({ password, ...user }) => user),
     meta: {
       count,
       page,
