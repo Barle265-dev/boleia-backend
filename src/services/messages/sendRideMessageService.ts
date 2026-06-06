@@ -10,6 +10,7 @@ export async function sendRideMessageService(
     where: { id: rideId },
     include: {
       passengers: { select: { id: true } },
+      driver: { select: { id: true, name: true } },
     },
   });
 
@@ -41,6 +42,28 @@ export async function sendRideMessageService(
       },
     },
   });
+
+  const recipientIds = new Set<string>();
+  if (isDriver) {
+    ride.passengers.forEach((passenger) => recipientIds.add(passenger.id));
+  } else {
+    recipientIds.add(ride.driverId);
+  }
+  recipientIds.delete(userId);
+
+  if (recipientIds.size) {
+    const senderName = isDriver ? ride.driver.name : message.sender.name;
+    await prisma.notification.createMany({
+      data: Array.from(recipientIds).map((recipientId) => ({
+        id: randomUUID(),
+        userId: recipientId,
+        title: "Nova mensagem",
+        message: `${senderName} enviou uma mensagem na boleia de ${ride.origin} para ${ride.destination}.`,
+        type: "message" as const,
+        link: `/ride/${rideId}?view=chat`,
+      })),
+    });
+  }
 
   return message;
 }

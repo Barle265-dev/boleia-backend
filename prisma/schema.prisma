@@ -96,6 +96,7 @@ model Ride {
   price          Float?
   observations   String?
   status         RideStatus @default(available)
+  createdAt      DateTime   @default(now())
 
   driverId       String @db.Uuid
   driver         User       @relation("DriverRelation", fields: [driverId], references: [id])

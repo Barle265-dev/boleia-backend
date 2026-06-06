@@ -5,8 +5,10 @@ type RideUpdatePayload = {
   origin?: string;
   destination?: string;
   departureTime?: string | Date;
+  totalSeats?: number;
   price?: number;
   observations?: string;
+  vehicleId?: string;
   status?: RideStatusValue;
 };
 
@@ -15,7 +17,12 @@ export async function updateRideService(
   data: RideUpdatePayload,
   userId: string,
 ) {
-  const ride = await prisma.ride.findUnique({ where: { id } });
+  const ride = await prisma.ride.findUnique({
+    where: { id },
+    include: {
+      passengers: { select: { id: true } },
+    },
+  });
 
   if (!ride) {
     throw { statusCode: 404, message: "Boleia nao encontrada." };
@@ -36,10 +43,36 @@ export async function updateRideService(
     }
   }
 
+  if (data.vehicleId) {
+    const vehicle = await prisma.vehicle.findUnique({
+      where: { id: data.vehicleId },
+    });
+
+    if (!vehicle) {
+      throw { statusCode: 404, message: "Veiculo nao encontrado." };
+    }
+
+    if (vehicle.userId !== userId) {
+      throw { statusCode: 403, message: "Este veiculo nao te pertence." };
+    }
+  }
+
+  const occupiedSeats = ride.passengers.length;
+  if (data.totalSeats !== undefined && data.totalSeats < occupiedSeats) {
+    throw {
+      statusCode: 400,
+      message: "O numero de lugares nao pode ser inferior aos passageiros confirmados.",
+    };
+  }
+
+  const availableSeats =
+    data.totalSeats !== undefined ? data.totalSeats - occupiedSeats : undefined;
+
   const updated = await prisma.ride.update({
     where: { id },
     data: {
       ...data,
+      ...(availableSeats !== undefined && { availableSeats }),
       ...(data.departureTime && {
         departureTime: new Date(data.departureTime),
       }),

@@ -12,8 +12,10 @@ export async function updateRideController(
     origin: z.string().optional(),
     destination: z.string().optional(),
     departureTime: z.iso.datetime().optional(),
+    totalSeats: z.number().int().min(1).optional(),
     price: z.number().optional(),
     observations: z.string().optional(),
+    vehicleId: z.uuid().optional(),
     status: z.enum(["available", "full", "in_progress", "completed", "cancelled"]).optional(),
   });
 
