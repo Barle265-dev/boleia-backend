@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
-import { findUserByIdService } from "services/users/findUserByIdService";
+import { findUserByIdService } from "../../services/users/findUserByIdService";
 
 export async function findByIdUser(
   request: FastifyRequest,

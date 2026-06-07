@@ -1,4 +1,4 @@
-import { prisma } from "../../../libs/prisma";
+import { prisma } from "../../libs/prisma";
 
 export async function listRideMessagesService(rideId: string, userId: string) {
   const ride = await prisma.ride.findUnique({

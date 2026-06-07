@@ -1,4 +1,4 @@
-import { prisma } from "../../../libs/prisma";
+import { prisma } from "../../libs/prisma";
 
 export async function listFreightsService(userId: string) {
   const user = await prisma.user.findUnique({
@@ -19,10 +19,22 @@ export async function listFreightsService(userId: string) {
     },
     include: {
       requester: {
-        select: { id: true, name: true, photoUrl: true, rating: true, phone: true },
+        select: {
+          id: true,
+          name: true,
+          photoUrl: true,
+          rating: true,
+          phone: true,
+        },
       },
       fretista: {
-        select: { id: true, name: true, photoUrl: true, rating: true, phone: true },
+        select: {
+          id: true,
+          name: true,
+          photoUrl: true,
+          rating: true,
+          phone: true,
+        },
       },
     },
     orderBy: { createdAt: "desc" },

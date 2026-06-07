@@ -1,10 +1,9 @@
 import { FastifyInstance } from "fastify";
-
-import { verifyJWT } from "middware/verify-jwt";
 import { sendRideMessageController } from "./sendRideMessageController";
 import { listRideMessagesController } from "./listRideMessagesController";
 import { sendFreightMessageController } from "./sendFreightMessageController";
 import { listFreightMessagesController } from "./listFreightMessagesController";
+import { verifyJWT } from "../../middware/verify-jwt";
 
 export async function messageRoutes(app: FastifyInstance) {
   app.addHook("onRequest", verifyJWT);

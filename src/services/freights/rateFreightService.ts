@@ -1,6 +1,10 @@
-import { prisma } from "../../../libs/prisma";
+import { prisma } from "../../libs/prisma";
 
-export async function rateFreightService(id: string, userId: string, rating: number) {
+export async function rateFreightService(
+  id: string,
+  userId: string,
+  rating: number,
+) {
   const freight = await prisma.freightRequest.findUnique({
     where: { id },
   });
@@ -10,7 +14,10 @@ export async function rateFreightService(id: string, userId: string, rating: num
   }
 
   if (freight.status !== "completed" || !freight.fretistaId) {
-    throw { statusCode: 400, message: "So e possivel avaliar fretes concluidos." };
+    throw {
+      statusCode: 400,
+      message: "So e possivel avaliar fretes concluidos.",
+    };
   }
 
   const ratedUserId =
@@ -24,14 +31,21 @@ export async function rateFreightService(id: string, userId: string, rating: num
     throw { statusCode: 403, message: "Nao fazes parte deste frete." };
   }
 
-  const ratedUser = await prisma.user.findUnique({ where: { id: ratedUserId } });
+  const ratedUser = await prisma.user.findUnique({
+    where: { id: ratedUserId },
+  });
   if (!ratedUser) {
     throw { statusCode: 404, message: "Utilizador nao encontrado." };
   }
 
   const denominator = Math.max(ratedUser.totalTrips, 1);
   const previousTripsForAverage = Math.max(denominator - 1, 0);
-  const newRating = Number(((ratedUser.rating * previousTripsForAverage + rating) / denominator).toFixed(1));
+  const newRating = Number(
+    (
+      (ratedUser.rating * previousTripsForAverage + rating) /
+      denominator
+    ).toFixed(1),
+  );
 
   await prisma.user.update({
     where: { id: ratedUserId },

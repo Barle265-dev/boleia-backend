@@ -1,4 +1,4 @@
-import { prisma } from "../../../libs/prisma";
+import { prisma } from "../../libs/prisma";
 
 export async function rateRideService(
   rideId: string,
@@ -18,11 +18,16 @@ export async function rateRideService(
   }
 
   if (ride.status !== "completed") {
-    throw { statusCode: 400, message: "So e possivel avaliar boleias concluidas." };
+    throw {
+      statusCode: 400,
+      message: "So e possivel avaliar boleias concluidas.",
+    };
   }
 
   const isDriver = ride.driverId === userId;
-  const isPassenger = ride.passengers.some((passenger) => passenger.id === userId);
+  const isPassenger = ride.passengers.some(
+    (passenger) => passenger.id === userId,
+  );
 
   if (!isDriver && !isPassenger) {
     throw { statusCode: 403, message: "Nao participaste nesta boleia." };

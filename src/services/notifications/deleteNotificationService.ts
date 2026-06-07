@@ -1,4 +1,4 @@
-import { prisma } from "../../../libs/prisma";
+import { prisma } from "../../libs/prisma";
 
 export async function deleteNotificationService(id: string, userId: string) {
   const notification = await prisma.notification.findUnique({
@@ -10,7 +10,10 @@ export async function deleteNotificationService(id: string, userId: string) {
   }
 
   if (notification.userId !== userId) {
-    throw { statusCode: 403, message: "Sem permissão para eliminar esta notificação." };
+    throw {
+      statusCode: 403,
+      message: "Sem permissão para eliminar esta notificação.",
+    };
   }
 
   await prisma.notification.delete({ where: { id } });

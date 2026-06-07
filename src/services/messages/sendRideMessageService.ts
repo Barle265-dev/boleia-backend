@@ -1,10 +1,10 @@
-import { prisma } from "../../../libs/prisma";
+import { prisma } from "../../libs/prisma";
 import { randomUUID } from "crypto";
 
 export async function sendRideMessageService(
   rideId: string,
   text: string,
-  userId: string
+  userId: string,
 ) {
   const ride = await prisma.ride.findUnique({
     where: { id: rideId },
@@ -26,7 +26,10 @@ export async function sendRideMessageService(
   }
 
   if (["cancelled", "completed"].includes(ride.status)) {
-    throw { statusCode: 400, message: "Não é possível enviar mensagens numa boleia encerrada." };
+    throw {
+      statusCode: 400,
+      message: "Não é possível enviar mensagens numa boleia encerrada.",
+    };
   }
 
   const message = await prisma.message.create({

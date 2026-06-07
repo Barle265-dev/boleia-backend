@@ -1,18 +1,20 @@
 import { FastifyInstance } from "fastify";
 import { register } from "./register";
-import { fetchAllUsers } from "controllers/users/fetchAll";
-import { remove } from "controllers/users/remove";
-import { updateUser } from "controllers/users/update";
-import { loginController } from "controllers/users/login";
-import { changePassword } from "controllers/users/changePassword";
-import { profile } from "controllers/users/profile";
-import { checkPermissions, verifyJWT } from "middware/verify-jwt";
-import { Permissions } from "permissionsTypes";
-import { findByIdUser } from "controllers/users/findById";
-import { editProfile } from "controllers/users/editProfile";
-import { prisma } from "../../../libs/prisma";
+
 import { randomUUID } from "crypto";
 import { z } from "zod";
+import { loginController } from "./login";
+import { checkPermissions, verifyJWT } from "../../middware/verify-jwt";
+import { fetchAllUsers } from "./fetchAll";
+import { findByIdUser } from "./findById";
+import { Permissions } from "../../permissionsTypes";
+import { updateUser } from "./update";
+import { remove } from "./remove";
+import { changePassword } from "./changePassword";
+
+import { editProfile } from "./editProfile";
+import { profile } from "./profile";
+import { prisma } from "../../libs/prisma";
 
 export async function userRoutes(fastify: FastifyInstance) {
   fastify.post("/register", register);

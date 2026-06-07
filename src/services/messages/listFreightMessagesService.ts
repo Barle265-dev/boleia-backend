@@ -1,6 +1,9 @@
-import { prisma } from "../../../libs/prisma";
+import { prisma } from "../../libs/prisma";
 
-export async function listFreightMessagesService(freightId: string, userId: string) {
+export async function listFreightMessagesService(
+  freightId: string,
+  userId: string,
+) {
   const freight = await prisma.freightRequest.findUnique({
     where: { id: freightId },
   });

@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { prisma } from "../../libs/prisma";
+import { prisma } from "../libs/prisma";
 
 export async function verifyJWT(request: FastifyRequest, reply: FastifyReply) {
   try {

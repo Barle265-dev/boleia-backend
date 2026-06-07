@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { loginService } from "services/users/loginService";
+import { loginService } from "../../services/users/loginService";
 import z from "zod";
 
 export async function loginController(

@@ -1,10 +1,10 @@
 import { FastifyReply, FastifyRequest } from "fastify";
+import { changePasswordService } from "../../services/users/changePasswordService";
 import { z } from "zod";
-import { changePasswordService } from "services/users/changePasswordService";
 
 export async function changePassword(
   request: FastifyRequest,
-  reply: FastifyReply
+  reply: FastifyReply,
 ) {
   const changePasswordUserBodySchema = z.object({
     old_password: z.string(),

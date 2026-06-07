@@ -1,4 +1,4 @@
-import { prisma } from "../../../libs/prisma";
+import { prisma } from "../../libs/prisma";
 import { randomUUID } from "crypto";
 
 export async function requestJoinRideService(rideId: string, userId: string) {
@@ -15,7 +15,10 @@ export async function requestJoinRideService(rideId: string, userId: string) {
   }
 
   if (ride.driverId === userId) {
-    throw { statusCode: 400, message: "Não podes inscrever-te na tua própria boleia." };
+    throw {
+      statusCode: 400,
+      message: "Não podes inscrever-te na tua própria boleia.",
+    };
   }
 
   if (ride.status !== "available") {
@@ -31,7 +34,10 @@ export async function requestJoinRideService(rideId: string, userId: string) {
   }
 
   if (ride.pendingPassengers.some((p) => p.id === userId)) {
-    throw { statusCode: 409, message: "Já tens um pedido pendente para esta boleia." };
+    throw {
+      statusCode: 409,
+      message: "Já tens um pedido pendente para esta boleia.",
+    };
   }
 
   await prisma.ride.update({

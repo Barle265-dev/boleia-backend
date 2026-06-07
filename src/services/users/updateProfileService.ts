@@ -1,8 +1,11 @@
-import { prisma } from "../../../libs/prisma";
-import { userNotFound } from "error/httpsError";
+import { prisma } from "../../libs/prisma";
+import { userNotFound } from "../../error/httpsError";
 import { UpdateUserDto } from "../../types";
 
-export async function updateProfileService(userId: string, data: UpdateUserDto) {
+export async function updateProfileService(
+  userId: string,
+  data: UpdateUserDto,
+) {
   const user = await prisma.user.findFirst({
     where: { id: userId },
   });

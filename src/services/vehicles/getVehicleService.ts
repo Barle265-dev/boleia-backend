@@ -1,4 +1,4 @@
-import { prisma } from "../../../libs/prisma";
+import { prisma } from "../../libs/prisma";
 
 export async function getVehicleService(id: string, userId: string) {
   const vehicle = await prisma.vehicle.findUnique({
@@ -10,7 +10,10 @@ export async function getVehicleService(id: string, userId: string) {
   }
 
   if (vehicle.userId !== userId) {
-    throw { statusCode: 403, message: "Sem permissão para aceder a este veículo." };
+    throw {
+      statusCode: 403,
+      message: "Sem permissão para aceder a este veículo.",
+    };
   }
 
   return vehicle;

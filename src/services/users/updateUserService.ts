@@ -1,6 +1,6 @@
 import { hash } from "bcrypt";
-import { prisma } from "../../../libs/prisma";
-import { userNotFound } from "error/httpsError";
+import { prisma } from "../../libs/prisma";
+import { userNotFound } from "../../error/httpsError";
 import { UserRole } from "../../types";
 
 type UserUpdatePayload = {
@@ -24,7 +24,9 @@ export async function updateUserService(id: string, data: UserUpdatePayload) {
     throw userNotFound();
   }
 
-  const hashedPassword = data.password ? await hash(data.password, 10) : undefined;
+  const hashedPassword = data.password
+    ? await hash(data.password, 10)
+    : undefined;
 
   if (data.permissionIds) {
     await prisma.userPermission.deleteMany({
@@ -46,7 +48,9 @@ export async function updateUserService(id: string, data: UserUpdatePayload) {
       Permissions: data.permissionIds
         ? {
             createMany: {
-              data: data.permissionIds.map((permissionId: string) => ({ permissionId })),
+              data: data.permissionIds.map((permissionId: string) => ({
+                permissionId,
+              })),
               skipDuplicates: true,
             },
           }

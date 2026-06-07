@@ -1,6 +1,6 @@
-import { SortOrder } from "types";
-import { prisma } from "../../../libs/prisma";
-import { Prisma } from "generated/prisma";
+import { SortOrder } from "../../types";
+import { prisma } from "../../libs/prisma";
+import type { Prisma } from "@prisma/client";
 
 interface FilterUser {
   name?: string;
@@ -13,8 +13,7 @@ interface FilterUser {
 }
 
 export async function fetchAllUsersService(params: FilterUser) {
-  const { page, perPage, sorterBy, sorterOrder, email, name, role } =
-    params;
+  const { page, perPage, sorterBy, sorterOrder, email, name, role } = params;
 
   const skip = (page - 1) * perPage;
   const take = perPage;

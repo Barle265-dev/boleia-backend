@@ -1,14 +1,26 @@
-import { prisma } from "../../../libs/prisma";
+import { prisma } from "../../libs/prisma";
 
 export async function getFreightService(id: string, userId: string) {
   const freight = await prisma.freightRequest.findUnique({
     where: { id },
     include: {
       requester: {
-        select: { id: true, name: true, photoUrl: true, rating: true, phone: true },
+        select: {
+          id: true,
+          name: true,
+          photoUrl: true,
+          rating: true,
+          phone: true,
+        },
       },
       fretista: {
-        select: { id: true, name: true, photoUrl: true, rating: true, phone: true },
+        select: {
+          id: true,
+          name: true,
+          photoUrl: true,
+          rating: true,
+          phone: true,
+        },
       },
     },
   });
@@ -26,10 +38,15 @@ export async function getFreightService(id: string, userId: string) {
     freight.requesterId === userId ||
     freight.fretistaId === userId ||
     freight.specificFretistaId === userId ||
-    (user?.role === "fretista" && freight.status === "pending" && !freight.specificFretistaId);
+    (user?.role === "fretista" &&
+      freight.status === "pending" &&
+      !freight.specificFretistaId);
 
   if (!canView) {
-    throw { statusCode: 403, message: "Sem permissao para aceder a este pedido." };
+    throw {
+      statusCode: 403,
+      message: "Sem permissao para aceder a este pedido.",
+    };
   }
 
   return freight;

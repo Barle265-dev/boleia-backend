@@ -1,6 +1,6 @@
 import { FastifyInstance } from "fastify";
 
-import { verifyJWT } from "middware/verify-jwt";
+import { verifyJWT } from "../../middware/verify-jwt";
 import { listNotificationsController } from "./listNotificationsController";
 import { markAsReadController } from "./markAsReadController";
 import { markAllAsReadController } from "./markAllAsReadController";

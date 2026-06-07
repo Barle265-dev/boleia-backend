@@ -1,6 +1,6 @@
-import { prisma } from "../../../libs/prisma";
+import { prisma } from "../../libs/prisma";
 import { randomUUID } from "crypto";
-import { CreateRideDto, RideStatus } from "types";
+import { CreateRideDto, RideStatus } from "../../types";
 
 export async function createRideService(
   data: Omit<CreateRideDto, "id" | "driverId" | "availableSeats" | "status">,

@@ -1,10 +1,10 @@
-import { prisma } from "../../../libs/prisma";
-import { UpdateVehicleDto } from "types";
+import { prisma } from "../../libs/prisma";
+import { UpdateVehicleDto } from "../../types";
 
 export async function updateVehicleService(
   id: string,
   data: Omit<UpdateVehicleDto, "id" | "userId">,
-  userId: string
+  userId: string,
 ) {
   const vehicle = await prisma.vehicle.findUnique({ where: { id } });
 
@@ -13,7 +13,10 @@ export async function updateVehicleService(
   }
 
   if (vehicle.userId !== userId) {
-    throw { statusCode: 403, message: "Sem permissão para editar este veículo." };
+    throw {
+      statusCode: 403,
+      message: "Sem permissão para editar este veículo.",
+    };
   }
 
   if (data.plate && data.plate !== vehicle.plate) {

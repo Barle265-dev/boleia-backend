@@ -1,6 +1,6 @@
 import { randomUUID } from "crypto";
-import { prisma } from "../../../libs/prisma";
-import { CreateFreightRequestDto } from "types";
+import { prisma } from "../../libs/prisma";
+import { CreateFreightRequestDto } from "../../types";
 
 export async function createFreightService(
   data: Omit<CreateFreightRequestDto, "id" | "requesterId" | "status">,
@@ -18,7 +18,10 @@ export async function createFreightService(
     }
 
     if (fretista.role !== "fretista") {
-      throw { statusCode: 400, message: "O utilizador selecionado nao e um fretista." };
+      throw {
+        statusCode: 400,
+        message: "O utilizador selecionado nao e um fretista.",
+      };
     }
 
     if (fretista.isBlocked) {
@@ -26,7 +29,10 @@ export async function createFreightService(
     }
 
     if (requestedFretistaId === requesterId) {
-      throw { statusCode: 400, message: "Nao podes solicitar um frete a ti mesmo." };
+      throw {
+        statusCode: 400,
+        message: "Nao podes solicitar um frete a ti mesmo.",
+      };
     }
   }
 
@@ -35,17 +41,31 @@ export async function createFreightService(
       id: randomUUID(),
       origin: data.origin,
       destination: data.destination,
-      requestedTime: data.requestedTime ? new Date(data.requestedTime) : undefined,
+      requestedTime: data.requestedTime
+        ? new Date(data.requestedTime)
+        : undefined,
       status: "pending",
       requesterId,
       specificFretistaId: requestedFretistaId,
     },
     include: {
       requester: {
-        select: { id: true, name: true, photoUrl: true, rating: true, phone: true },
+        select: {
+          id: true,
+          name: true,
+          photoUrl: true,
+          rating: true,
+          phone: true,
+        },
       },
       fretista: {
-        select: { id: true, name: true, photoUrl: true, rating: true, phone: true },
+        select: {
+          id: true,
+          name: true,
+          photoUrl: true,
+          rating: true,
+          phone: true,
+        },
       },
     },
   });

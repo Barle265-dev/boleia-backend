@@ -1,10 +1,10 @@
-import { prisma } from "../../../libs/prisma";
+import { prisma } from "../../libs/prisma";
 import { randomUUID } from "crypto";
 
 export async function acceptPassengerService(
   rideId: string,
   passengerId: string,
-  userId: string
+  userId: string,
 ) {
   const ride = await prisma.ride.findUnique({
     where: { id: rideId },
@@ -16,11 +16,17 @@ export async function acceptPassengerService(
   }
 
   if (ride.driverId !== userId) {
-    throw { statusCode: 403, message: "Só o motorista pode aceitar passageiros." };
+    throw {
+      statusCode: 403,
+      message: "Só o motorista pode aceitar passageiros.",
+    };
   }
 
   if (!ride.pendingPassengers.some((p) => p.id === passengerId)) {
-    throw { statusCode: 404, message: "Este utilizador não tem pedido pendente nesta boleia." };
+    throw {
+      statusCode: 404,
+      message: "Este utilizador não tem pedido pendente nesta boleia.",
+    };
   }
 
   const updated = await prisma.$transaction(async (tx) => {

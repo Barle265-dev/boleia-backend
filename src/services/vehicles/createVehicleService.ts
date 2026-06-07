@@ -1,10 +1,10 @@
-import { prisma } from "../../../libs/prisma";
+import { prisma } from "../../libs/prisma";
 import { randomUUID } from "crypto";
-import { CreateVehicleDto } from "types";
+import { CreateVehicleDto } from "../../types";
 
 export async function createVehicleService(
   data: Omit<CreateVehicleDto, "id" | "userId">,
-  userId: string
+  userId: string,
 ) {
   const plateExists = await prisma.vehicle.findUnique({
     where: { plate: data.plate },

@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { fetchAllUsersService } from "services/users/fetchAllUsersService";
-import { zodFilterSchema } from "tools/fetch-params";
+import { fetchAllUsersService } from "../../services/users/fetchAllUsersService";
+import { zodFilterSchema } from "../../tools/fetch-params";
 import z from "zod";
 
 export async function fetchAllUsers(

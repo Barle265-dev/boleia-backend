@@ -4,8 +4,8 @@ import { listFretistaController } from "./listFretistaController";
 import { listFreightsController } from "./listFreightsController";
 import { getFreightController } from "./getFreightController";
 import { respondFreightController } from "./respondFreightController";
-import { rateFreightController } from "controllers/freights/rateFreightController";
-import { verifyJWT } from "middware/verify-jwt";
+import { rateFreightController } from "./rateFreightController";
+import { verifyJWT } from "../../middware/verify-jwt";
 
 export async function freightRoutes(app: FastifyInstance) {
   // Listagem pública de fretistas

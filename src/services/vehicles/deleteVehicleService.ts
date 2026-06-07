@@ -1,4 +1,4 @@
-import { prisma } from "../../../libs/prisma";
+import { prisma } from "../../libs/prisma";
 
 export async function deleteVehicleService(id: string, userId: string) {
   const vehicle = await prisma.vehicle.findUnique({ where: { id } });
@@ -8,7 +8,10 @@ export async function deleteVehicleService(id: string, userId: string) {
   }
 
   if (vehicle.userId !== userId) {
-    throw { statusCode: 403, message: "Sem permissão para eliminar este veículo." };
+    throw {
+      statusCode: 403,
+      message: "Sem permissão para eliminar este veículo.",
+    };
   }
 
   await prisma.vehicle.delete({ where: { id } });

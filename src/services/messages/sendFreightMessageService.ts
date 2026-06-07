@@ -1,10 +1,10 @@
-import { prisma } from "../../../libs/prisma";
+import { prisma } from "../../libs/prisma";
 import { randomUUID } from "crypto";
 
 export async function sendFreightMessageService(
   freightId: string,
   data: { text: string; recipientId: string },
-  userId: string
+  userId: string,
 ) {
   const freight = await prisma.freightRequest.findUnique({
     where: { id: freightId },
@@ -21,13 +21,21 @@ export async function sendFreightMessageService(
     throw { statusCode: 403, message: "Não fazes parte deste frete." };
   }
 
-  const expectedRecipientId = isRequester ? freight.fretistaId : freight.requesterId;
+  const expectedRecipientId = isRequester
+    ? freight.fretistaId
+    : freight.requesterId;
   if (data.recipientId !== expectedRecipientId) {
-    throw { statusCode: 400, message: "Destinatário inválido para este frete." };
+    throw {
+      statusCode: 400,
+      message: "Destinatário inválido para este frete.",
+    };
   }
 
   if (freight.status === "declined") {
-    throw { statusCode: 400, message: "Não é possível enviar mensagens num frete recusado." };
+    throw {
+      statusCode: 400,
+      message: "Não é possível enviar mensagens num frete recusado.",
+    };
   }
 
   const message = await prisma.message.create({

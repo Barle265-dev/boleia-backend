@@ -1,7 +1,7 @@
-import { LoginDTO } from "types";
-import { prisma } from "../../../libs/prisma";
+import { LoginDTO } from "../../types";
+import { prisma } from "../../libs/prisma";
 import { compare } from "bcrypt";
-import { badCredentials, userNotFound } from "error/httpsError";
+import { badCredentials, userNotFound } from "../../error/httpsError";
 
 export async function loginService(data: LoginDTO) {
   const userExists = await prisma.user.findUnique({

@@ -1,5 +1,5 @@
-import { prisma } from "../../../libs/prisma";
-import { userNotFound } from "error/httpsError";
+import { prisma } from "../../libs/prisma";
+import { userNotFound } from "../../error/httpsError";
 
 export async function profileService(userId: string) {
   try {

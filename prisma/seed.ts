@@ -1,6 +1,6 @@
 import { hash } from "bcrypt";
 import { randomUUID } from "crypto";
-import { prisma } from "../libs/prisma";
+import { prisma } from "../src/libs/prisma";
 import { Permissions } from "../src/permissionsTypes";
 
 async function main() {

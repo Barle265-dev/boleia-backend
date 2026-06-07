@@ -1,5 +1,5 @@
 import { randomUUID } from "crypto";
-import { prisma } from "../../../libs/prisma";
+import { prisma } from "../../libs/prisma";
 
 type FreightAction = "accepted" | "declined" | "in_progress" | "completed";
 
@@ -19,23 +19,44 @@ export async function respondFreightService(
   const user = await prisma.user.findUnique({ where: { id: userId } });
 
   if (user?.role !== "fretista") {
-    throw { statusCode: 403, message: "So um fretista pode responder a este pedido." };
+    throw {
+      statusCode: 403,
+      message: "So um fretista pode responder a este pedido.",
+    };
   }
 
   if (freight.specificFretistaId && freight.specificFretistaId !== userId) {
-    throw { statusCode: 403, message: "So o fretista designado pode responder a este pedido." };
+    throw {
+      statusCode: 403,
+      message: "So o fretista designado pode responder a este pedido.",
+    };
   }
 
-  if ((action === "accepted" || action === "declined") && freight.status !== "pending") {
+  if (
+    (action === "accepted" || action === "declined") &&
+    freight.status !== "pending"
+  ) {
     throw { statusCode: 400, message: "Este pedido ja foi respondido." };
   }
 
-  if (action === "in_progress" && (freight.status !== "accepted" || freight.fretistaId !== userId)) {
-    throw { statusCode: 400, message: "So podes iniciar um frete aceite por ti." };
+  if (
+    action === "in_progress" &&
+    (freight.status !== "accepted" || freight.fretistaId !== userId)
+  ) {
+    throw {
+      statusCode: 400,
+      message: "So podes iniciar um frete aceite por ti.",
+    };
   }
 
-  if (action === "completed" && (freight.status !== "in_progress" || freight.fretistaId !== userId)) {
-    throw { statusCode: 400, message: "So podes concluir um frete em curso por ti." };
+  if (
+    action === "completed" &&
+    (freight.status !== "in_progress" || freight.fretistaId !== userId)
+  ) {
+    throw {
+      statusCode: 400,
+      message: "So podes concluir um frete em curso por ti.",
+    };
   }
 
   const updated = await prisma.$transaction(async (tx) => {
@@ -48,8 +69,24 @@ export async function respondFreightService(
               fretistaId: action === "accepted" ? userId : freight.fretistaId,
             },
             include: {
-              requester: { select: { id: true, name: true, photoUrl: true, rating: true, phone: true } },
-              fretista: { select: { id: true, name: true, photoUrl: true, rating: true, phone: true } },
+              requester: {
+                select: {
+                  id: true,
+                  name: true,
+                  photoUrl: true,
+                  rating: true,
+                  phone: true,
+                },
+              },
+              fretista: {
+                select: {
+                  id: true,
+                  name: true,
+                  photoUrl: true,
+                  rating: true,
+                  phone: true,
+                },
+              },
             },
           })
         : await (async () => {
@@ -62,13 +99,32 @@ export async function respondFreightService(
             const refreshed = await tx.freightRequest.findUnique({
               where: { id },
               include: {
-                requester: { select: { id: true, name: true, photoUrl: true, rating: true, phone: true } },
-                fretista: { select: { id: true, name: true, photoUrl: true, rating: true, phone: true } },
+                requester: {
+                  select: {
+                    id: true,
+                    name: true,
+                    photoUrl: true,
+                    rating: true,
+                    phone: true,
+                  },
+                },
+                fretista: {
+                  select: {
+                    id: true,
+                    name: true,
+                    photoUrl: true,
+                    rating: true,
+                    phone: true,
+                  },
+                },
               },
             });
 
             if (!refreshed) {
-              throw { statusCode: 404, message: "Pedido de frete nao encontrado." };
+              throw {
+                statusCode: 404,
+                message: "Pedido de frete nao encontrado.",
+              };
             }
 
             return refreshed;

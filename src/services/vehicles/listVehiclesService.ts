@@ -1,4 +1,4 @@
-import { prisma } from "../../../libs/prisma";
+import { prisma } from "../../libs/prisma";
 
 export async function listVehiclesService(userId: string) {
   const vehicles = await prisma.vehicle.findMany({

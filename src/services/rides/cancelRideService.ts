@@ -1,4 +1,4 @@
-import { prisma } from "../../../libs/prisma";
+import { prisma } from "../../libs/prisma";
 import { randomUUID } from "crypto";
 
 export async function cancelRideService(id: string, userId: string) {
@@ -12,11 +12,17 @@ export async function cancelRideService(id: string, userId: string) {
   }
 
   if (ride.driverId !== userId) {
-    throw { statusCode: 403, message: "Sem permissão para cancelar esta boleia." };
+    throw {
+      statusCode: 403,
+      message: "Sem permissão para cancelar esta boleia.",
+    };
   }
 
   if (["completed", "cancelled"].includes(ride.status)) {
-    throw { statusCode: 400, message: "Esta boleia já foi concluída ou cancelada." };
+    throw {
+      statusCode: 400,
+      message: "Esta boleia já foi concluída ou cancelada.",
+    };
   }
 
   const updated = await prisma.ride.update({

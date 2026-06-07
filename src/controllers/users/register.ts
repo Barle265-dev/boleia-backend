@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 import { registerService } from "../../services/users/userServices";
-import { UserRole } from "types";
+import { UserRole } from "../../types";
 
 export async function register(request: FastifyRequest, reply: FastifyReply) {
   const bodySchema = z.object({

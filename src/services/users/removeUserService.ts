@@ -1,4 +1,4 @@
-import { prisma } from "../../../libs/prisma";
+import { prisma } from "../../libs/prisma";
 
 export async function removeUserService(id: string) {
   const user = await prisma.user.findUnique({

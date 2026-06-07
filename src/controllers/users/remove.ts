@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
-import { removeUserService } from "services/users/removeUserService";
+import { removeUserService } from "../../services/users/removeUserService";
 
 export async function remove(request: FastifyRequest, reply: FastifyReply) {
   const paramsSchema = z.object({
