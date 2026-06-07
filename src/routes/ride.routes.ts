@@ -8,7 +8,7 @@ import { cancelRideController } from "../controllers/rides/cancelRideController"
 import { requestJoinRideController } from "../controllers/rides/requestJoinRideController";
 import { acceptPassengerController } from "../controllers/rides/acceptPassengerController";
 import { rateRideController } from "../controllers/rides/rateRideController";
-import { verifyJWT } from "middware/verify-jwt";
+import { verifyJWT } from "../middware/verify-jwt";
 
 export async function rideRoutes(app: FastifyInstance) {
   // Rotas públicas

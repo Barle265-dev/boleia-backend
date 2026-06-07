@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
-import { rateFreightService } from "services/freights/rateFreightService";
+import { rateFreightService } from "../../services/freights/rateFreightService";
 
 export async function rateFreightController(request: FastifyRequest, reply: FastifyReply) {
   const { id } = z.object({ id: z.string().uuid() }).parse(request.params);

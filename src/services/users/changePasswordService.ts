@@ -1,8 +1,8 @@
 import { compare, hash } from "bcrypt";
 import { ChangePasswordDTO } from "../../types";
 import { prisma } from "../../../libs/prisma";
-import { AppError } from "error/appError";
-import { userNotFound } from "error/httpsError";
+import { AppError } from "../../error/appError";
+import { userNotFound } from "../../error/httpsError";
 
 export async function changePasswordService(
   userId: string,

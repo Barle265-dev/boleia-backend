@@ -1,7 +1,7 @@
 import { hash } from "bcrypt";
 import { prisma } from "../../../libs/prisma";
 import { randomUUID } from "crypto";
-import { UserDto, UserRole } from "types";
+import { UserDto, UserRole } from "../../types";
 
 export async function registerService(data: UserDto) {
   const userExists = await prisma.user.findUnique({

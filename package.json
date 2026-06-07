@@ -2,6 +2,7 @@
   "name": "backend-agenda",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "commonjs",
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "prisma:generate": "prisma generate",

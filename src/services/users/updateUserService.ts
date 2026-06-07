@@ -1,6 +1,6 @@
 import { hash } from "bcrypt";
 import { prisma } from "../../../libs/prisma";
-import { userNotFound } from "error/httpsError";
+import { userNotFound } from "../../error/httpsError";
 import { UserRole } from "../../types";
 
 type UserUpdatePayload = {

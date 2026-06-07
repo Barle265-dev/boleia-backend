@@ -1,5 +1,5 @@
 import { prisma } from "../../../libs/prisma";
-import { userNotFound } from "error/httpsError";
+import { userNotFound } from "../../error/httpsError";
 import { UpdateUserDto } from "../../types";
 
 export async function updateProfileService(userId: string, data: UpdateUserDto) {

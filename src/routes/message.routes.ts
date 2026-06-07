@@ -3,7 +3,7 @@ import { sendRideMessageController } from "../controllers/messages/sendRideMessa
 import { listRideMessagesController } from "../controllers/messages/listRideMessagesController";
 import { sendFreightMessageController } from "../controllers/messages/sendFreightMessageController";
 import { listFreightMessagesController } from "../controllers/messages/listFreightMessagesController";
-import { verifyJWT } from "middware/verify-jwt";
+import { verifyJWT } from "../middware/verify-jwt";
 
 export async function messageRoutes(app: FastifyInstance) {
   app.addHook("onRequest", verifyJWT);

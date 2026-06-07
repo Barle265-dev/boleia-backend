@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
-import { UserRole } from "types";
-import { updateUserService } from "services/users/updateUserService";
+import { UserRole } from "../../types";
+import { updateUserService } from "../../services/users/updateUserService";
 
 export async function updateUser(request: FastifyRequest, reply: FastifyReply) {
   const updateUserBodySchema = z.object({

@@ -1,5 +1,5 @@
 import { prisma } from "../../../libs/prisma";
-import { userFound } from "error/httpsError";
+import { userFound } from "../../error/httpsError";
 
 export async function findUserByIdService(id: string) {
   const user = await prisma.user.findUnique({

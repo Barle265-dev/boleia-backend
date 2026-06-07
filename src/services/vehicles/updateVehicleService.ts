@@ -1,5 +1,5 @@
 import { prisma } from "../../../libs/prisma";
-import { UpdateVehicleDto } from "types";
+import { UpdateVehicleDto } from "../../types";
 
 export async function updateVehicleService(
   id: string,

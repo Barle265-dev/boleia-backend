@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
-import { changePasswordService } from "services/users/changePasswordService";
+import { changePasswordService } from "../../services/users/changePasswordService";
 
 export async function changePassword(
   request: FastifyRequest,

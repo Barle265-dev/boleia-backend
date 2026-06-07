@@ -3,7 +3,7 @@ import { listNotificationsController } from "../controllers/notifications/listNo
 import { markAsReadController } from "../controllers/notifications/markAsReadController";
 import { markAllAsReadController } from "../controllers/notifications/markAllAsReadController";
 import { deleteNotificationController } from "../controllers/notifications/deleteNotificationController";
-import { verifyJWT } from "middware/verify-jwt";
+import { verifyJWT } from "../middware/verify-jwt";
 
 export async function notificationRoutes(app: FastifyInstance) {
   app.addHook("onRequest", verifyJWT);

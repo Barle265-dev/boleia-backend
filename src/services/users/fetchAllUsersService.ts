@@ -1,6 +1,6 @@
-import { SortOrder } from "types";
+import { SortOrder } from "../../types";
 import { prisma } from "../../../libs/prisma";
-import { Prisma } from "generated/prisma";
+import { Prisma } from "@prisma/client";
 
 interface FilterUser {
   name?: string;

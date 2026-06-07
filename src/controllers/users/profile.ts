@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { profileService } from "services/users/profileService";
+import { profileService } from "../../services/users/profileService";
 
 export async function profile(request: FastifyRequest, reply: FastifyReply) {
   const userId = request.user.id;

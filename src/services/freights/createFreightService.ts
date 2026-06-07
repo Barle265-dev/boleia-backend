@@ -1,6 +1,6 @@
 import { randomUUID } from "crypto";
 import { prisma } from "../../../libs/prisma";
-import { CreateFreightRequestDto } from "types";
+import { CreateFreightRequestDto } from "../../types";
 
 export async function createFreightService(
   data: Omit<CreateFreightRequestDto, "id" | "requesterId" | "status">,

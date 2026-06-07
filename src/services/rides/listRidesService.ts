@@ -1,4 +1,4 @@
-import { RideStatus } from "types";
+import { RideStatus } from "../../types";
 import { prisma } from "../../../libs/prisma";
 
 export async function listRidesService(filters: {
