@@ -3,7 +3,8 @@ import cors from "@fastify/cors";
 import dotenv from "dotenv";
 
 import fastifyJwt from "@fastify/jwt";
-import { appRoutes } from "routes";
+import { appRoutes } from "./routes/index";
+
 dotenv.config();
 const PORT = Number(process.env.PORT) || 4444;
 
