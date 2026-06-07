@@ -1,10 +1,11 @@
 import { FastifyInstance } from "fastify";
-import { createVehicleController } from "../controllers/vehicles/createVehicleController";
-import { listVehiclesController } from "../controllers/vehicles/listVehiclesController";
-import { getVehicleController } from "../controllers/vehicles/getVehicleController";
-import { updateVehicleController } from "../controllers/vehicles/updateVehicleController";
-import { deleteVehicleController } from "../controllers/vehicles/deleteVehicleController";
+
 import { verifyJWT } from "middware/verify-jwt";
+import { createVehicleController } from "./createVehicleController";
+import { listVehiclesController } from "./listVehiclesController";
+import { getVehicleController } from "./getVehicleController";
+import { updateVehicleController } from "./updateVehicleController";
+import { deleteVehicleController } from "./deleteVehicleController";
 
 export async function vehicleRoutes(app: FastifyInstance) {
   app.addHook("onRequest", verifyJWT);

@@ -1,9 +1,10 @@
 import { FastifyInstance } from "fastify";
-import { listNotificationsController } from "../controllers/notifications/listNotificationsController";
-import { markAsReadController } from "../controllers/notifications/markAsReadController";
-import { markAllAsReadController } from "../controllers/notifications/markAllAsReadController";
-import { deleteNotificationController } from "../controllers/notifications/deleteNotificationController";
+
 import { verifyJWT } from "middware/verify-jwt";
+import { listNotificationsController } from "./listNotificationsController";
+import { markAsReadController } from "./markAsReadController";
+import { markAllAsReadController } from "./markAllAsReadController";
+import { deleteNotificationController } from "./deleteNotificationController";
 
 export async function notificationRoutes(app: FastifyInstance) {
   app.addHook("onRequest", verifyJWT);
