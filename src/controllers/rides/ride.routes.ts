@@ -1,13 +1,13 @@
 import { FastifyInstance } from "fastify";
 
-import { createRideController } from "../controllers/rides/createRideController";
-import { listRidesController } from "../controllers/rides/listRidesController";
-import { getRideController } from "../controllers/rides/getRideController";
-import { updateRideController } from "../controllers/rides/updateRideController";
-import { cancelRideController } from "../controllers/rides/cancelRideController";
-import { requestJoinRideController } from "../controllers/rides/requestJoinRideController";
-import { acceptPassengerController } from "../controllers/rides/acceptPassengerController";
-import { rateRideController } from "../controllers/rides/rateRideController";
+import { createRideController } from "./createRideController";
+import { listRidesController } from "./listRidesController";
+import { getRideController } from "./getRideController";
+import { updateRideController } from "./updateRideController";
+import { cancelRideController } from "./cancelRideController";
+import { requestJoinRideController } from "./requestJoinRideController";
+import { acceptPassengerController } from "./acceptPassengerController";
+import { rateRideController } from "./rateRideController";
 import { verifyJWT } from "middware/verify-jwt";
 
 export async function rideRoutes(app: FastifyInstance) {

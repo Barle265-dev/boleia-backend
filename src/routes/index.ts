@@ -1,12 +1,12 @@
 import { FastifyInstance } from "fastify";
-import { freightRoutes } from "routes/freight.routes";
-import { messageRoutes } from "routes/message.routes";
-import { notificationRoutes } from "routes/notification.routes";
+import { freightRoutes } from "controllers/freights/freight.routes";
 import { permissionRoutes } from "routes/permission.routes";
-import { rideRoutes } from "routes/ride.routes";
+import { rideRoutes } from "controllers/rides/ride.routes";
 import { uploadRoutes } from "routes/upload.routes";
-import { userRoutes } from "routes/user.routes";
-import { vehicleRoutes } from "routes/vehicle.routes";
+import { userRoutes } from "controllers/users/user.routes";
+import { notificationRoutes } from "controllers/notifications/notification.routes";
+import { vehicleRoutes } from "controllers/vehicles/vehicle.routes";
+import { messageRoutes } from "controllers/messages/message.routes";
 
 export async function appRoutes(app: FastifyInstance) {
   app.register(userRoutes);
